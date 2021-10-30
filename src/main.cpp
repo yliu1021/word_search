@@ -10,7 +10,7 @@
 constexpr double milli_in_sec = 1000.0;
 
 auto parse_corpus(const std::string &path) -> std::optional<Trie> {
-  std::cout << "Reading " << path << std::endl;
+  std::cerr << "Reading " << path << std::endl;
   std::ifstream stream(path, std::ios::in);
   if (!stream.is_open()) {
     std::cerr << "Unable to open file" << std::endl;
@@ -34,7 +34,7 @@ auto parse_corpus(const std::string &path) -> std::optional<Trie> {
       std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
   auto seconds = static_cast<double>(duration.count()) / milli_in_sec;
   stream.close();
-  std::cout << "Read " << num_lines << " lines in " << seconds << " secs"
+  std::cerr << "Read " << num_lines << " lines in " << seconds << " secs"
             << std::endl;
   return trie;
 }
@@ -45,12 +45,13 @@ auto main(int argc, const char *argv[]) -> int {
     std::cerr << "Usage: " << args[0] << " [CORPUS_FILE]" << std::endl;
     return EXIT_FAILURE;
   }
+
   std::optional<Trie> corpus = parse_corpus(args[1]);
   if (corpus == std::nullopt) {
     std::cerr << "Couldn't parse corpus trie" << std::endl;
     return EXIT_FAILURE;
   }
-  std::cout << "Loaded corpus" << std::endl;
+  std::cerr << "Loaded corpus" << std::endl;
 
   std::string line;
   std::vector<std::vector<char>> grid_vec;
