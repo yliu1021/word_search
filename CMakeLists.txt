@@ -4,4 +4,6 @@ project(word_search)
 set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(src)
+
+include(CTest)
 add_subdirectory(tests)
