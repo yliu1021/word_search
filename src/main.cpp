@@ -70,8 +70,9 @@ auto main(int argc, const char *argv[]) -> int {
           }
           std::cout << std::endl;
         }
+        std::cout << '-' << std::endl;
       } catch (const InvalidGrid &) {
-        std::cerr << "Invalid grid" << std::endl;
+        std::cout << "invalid grid" << std::endl;
       }
       grid_vec.clear();
     } else {
