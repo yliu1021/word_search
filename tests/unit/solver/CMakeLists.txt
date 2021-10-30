@@ -1,0 +1,3 @@
+add_executable(solver_tests solver_tests.cpp)
+target_link_libraries(solver_tests gtest_main solver)
+gtest_discover_tests(solver_tests)
