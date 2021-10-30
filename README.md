@@ -3,7 +3,7 @@ Word search is a program that takes a corpus and searches for those words in a g
 
 ## Quick start
 Word search requires a corpus of words (a text file of words in lowercase with only letters and each word on a new line). You can download one [here](http://www.mieliestronk.com/corncob_lowercase.txt). To build and run word search, run the following:
-```bash
+```
 > mkdir build
 > cd build
 > cmake ..
@@ -11,7 +11,7 @@ Word search requires a corpus of words (a text file of words in lowercase with o
 > ./src/word_search path/to/corpus.txt
 ```
 If you downloaded the corpus from the above link, you should see the output
-```bash
+```
 Reading /Users/yuhanliu/Downloads/english_corpus.txt
 Unable to insert "cross-bun" into trie (line no. 11652)... ignoring
 Read 58110 lines in 0.141 secs
@@ -21,13 +21,13 @@ Loaded corpus
 
 Once loaded, simply enter a grid as a list of rows separated by new lines.
 
-```bash
+```
 cake..
 .a....
 ..t...
 ```
 Note that you can use '.' or any non-lowercase letter to denote a whitespace. Once you've finished entering the grid, press enter again to insert an empty line and word search will list all the words that it's found
-```bash
+```
 cake..
 .a....
 ..t...
