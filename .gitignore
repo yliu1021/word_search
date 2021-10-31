@@ -1,3 +1,5 @@
-cmake-build-debug/
+cmake-*/
 
 .idea/
+
+fuzz_output/
