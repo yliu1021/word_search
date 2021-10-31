@@ -21,6 +21,10 @@ class Solver {
   [[nodiscard]] auto find_all_words() const noexcept -> std::vector<WordPath>;
 
  private:
+  [[nodiscard]] auto single_thread_solve(std::size_t row_start,
+                                         std::size_t row_end) const noexcept
+      -> std::vector<WordPath>;
+
   auto dfs_find_words(std::vector<WordPath> &acc, const Grid::Pos &pos,
                       WordPath &path,
                       std::vector<std::vector<bool>> &visited_pos,

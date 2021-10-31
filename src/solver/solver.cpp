@@ -4,13 +4,38 @@
 
 #include "solver.h"
 
+#include <future>
+
 Solver::Solver(Grid g, Trie t) : grid_(std::move(g)), trie_(std::move(t)) {}
 
 auto Solver::find_all_words() const noexcept -> std::vector<WordPath> {
+  constexpr std::size_t load_per_thread = 1;
+  std::size_t rows_per_thread =
+      (load_per_thread + grid_.num_cols() - 1) / grid_.num_cols();
+  std::vector<std::future<std::vector<WordPath>>> workers;
+  std::size_t row_start = 0;
+  while (row_start < grid_.num_rows()) {
+    std::size_t row_end =
+        std::min(row_start + rows_per_thread, grid_.num_rows());
+    workers.emplace_back(
+        std::async(&Solver::single_thread_solve, this, row_start, row_end));
+    row_start = row_end;
+  }
+  std::vector<WordPath> results;
+  for (auto& worker : workers) {
+    const auto& worker_res = worker.get();
+    results.insert(results.end(), worker_res.begin(), worker_res.end());
+  }
+  return results;
+}
+
+auto Solver::single_thread_solve(std::size_t row_start,
+                                 std::size_t row_end) const noexcept
+    -> std::vector<WordPath> {
   std::vector<std::vector<bool>> visited_pos(
       grid_.num_rows(), std::vector<bool>(grid_.num_cols(), false));
   std::vector<WordPath> found_words;
-  for (std::size_t row = 0; row < grid_.num_rows(); ++row) {
+  for (std::size_t row = row_start; row < row_end; ++row) {
     for (std::size_t col = 0; col < grid_.num_cols(); ++col) {
       char c = grid_.at(row, col);
       if (std::islower(c) == 0) {
