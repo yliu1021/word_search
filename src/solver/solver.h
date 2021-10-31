@@ -22,7 +22,8 @@ class Solver {
 
  private:
   auto dfs_find_words(std::vector<WordPath> &acc, const Grid::Pos &pos,
-                      WordPath &path, std::set<Grid::Pos> &visited_pos,
+                      WordPath &path,
+                      std::vector<std::vector<bool>> &visited_pos,
                       const std::shared_ptr<Trie::Node> &trie) const noexcept
       -> void;
 

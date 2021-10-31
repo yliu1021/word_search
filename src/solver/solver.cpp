@@ -4,11 +4,11 @@
 
 #include "solver.h"
 
-#include <iostream>
-
 Solver::Solver(Grid g, Trie t) : grid_(std::move(g)), trie_(std::move(t)) {}
 
 auto Solver::find_all_words() const noexcept -> std::vector<WordPath> {
+  std::vector<std::vector<bool>> visited_pos(
+      grid_.num_rows(), std::vector<bool>(grid_.num_cols(), false));
   std::vector<WordPath> found_words;
   for (std::size_t row = 0; row < grid_.num_rows(); ++row) {
     for (std::size_t col = 0; col < grid_.num_cols(); ++col) {
@@ -17,7 +17,9 @@ auto Solver::find_all_words() const noexcept -> std::vector<WordPath> {
         continue;
       }
       Solver::WordPath path = {{c, {row, col}}};
-      std::set<Grid::Pos> visited_pos;
+      for (auto& row : visited_pos) {
+        std::fill(row.begin(), row.end(), false);
+      }
       dfs_find_words(found_words, {row, col}, path, visited_pos,
                      trie_.root_node()->at(c));
     }
@@ -27,7 +29,7 @@ auto Solver::find_all_words() const noexcept -> std::vector<WordPath> {
 
 auto Solver::dfs_find_words(
     std::vector<WordPath>& acc, const Grid::Pos& pos, Solver::WordPath& path,
-    std::set<Grid::Pos>& visited_pos,
+    std::vector<std::vector<bool>>& visited_pos,
     const std::shared_ptr<Trie::Node>& trie) const noexcept -> void {
   if (!trie) {
     return;
@@ -35,9 +37,9 @@ auto Solver::dfs_find_words(
   if (trie->is_leaf) {
     acc.push_back(path);
   }
-  auto insert_loc = visited_pos.emplace(pos);
+  visited_pos[pos.first][pos.second] = true;
   grid_.call_for_each_neighbor(pos, [&](const Grid::Pos& new_pos, char new_c) {
-    if (visited_pos.contains(new_pos)) {
+    if (visited_pos[new_pos.first][new_pos.second]) {
       return;
     }
     if (std::islower(new_c) == 0) {
@@ -47,5 +49,5 @@ auto Solver::dfs_find_words(
     dfs_find_words(acc, new_pos, path, visited_pos, trie->at(new_c));
     path.pop_back();
   });
-  visited_pos.erase(insert_loc.first);
+  visited_pos[pos.first][pos.second] = false;
 }
