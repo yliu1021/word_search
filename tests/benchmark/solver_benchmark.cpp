@@ -92,6 +92,7 @@ auto main(int argc, const char *argv[]) -> int {
   benchmark_grid_size(10, 10, *corpus);    // NOLINT
   benchmark_grid_size(100, 10, *corpus);   // NOLINT
   benchmark_grid_size(100, 100, *corpus);  // NOLINT
+  benchmark_grid_size(1000, 100, *corpus);  // NOLINT
 
   return EXIT_SUCCESS;
 }
