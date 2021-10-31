@@ -44,6 +44,37 @@ auto parse_corpus(const std::string &path) -> std::optional<Trie> {
   return trie;
 }
 
+auto benchmark_grid_size(std::size_t num_rows, std::size_t num_cols,
+                         const Trie &corpus) {
+  std::cerr << "Creating " << num_rows << " x " << num_cols << " grid... ";
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  std::default_random_engine generator(seed);
+  std::uniform_int_distribution<char> distribution('a', 'z');
+  std::vector<std::vector<char>> grid_vec(num_rows,
+                                          std::vector<char>(num_cols, '.'));
+  for (auto &row : grid_vec) {
+    for (auto &c : row) {
+      c = distribution(generator);
+    }
+  }
+  std::cerr << "Done" << std::endl;
+
+  std::cerr << "Starting solve... ";
+  Grid grid(grid_vec);
+  Solver solver(grid, corpus);
+  auto start = std::chrono::high_resolution_clock::now();
+  auto word_paths = solver.find_all_words();
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+  auto seconds = static_cast<double>(duration.count()) / milli_in_sec;
+  std::cerr << "Done" << std::endl;
+  auto kwords_per_second =
+      static_cast<double>(word_paths.size()) / 1000.0 / seconds;  // NOLINT
+  std::cerr << "Found " << word_paths.size() << " words in " << seconds
+            << " seconds (" << kwords_per_second << " kwords/sec)" << std::endl;
+}
+
 auto main(int argc, const char *argv[]) -> int {
   auto args = std::span(argv, size_t(argc));
   if (argc != 2) {
@@ -58,33 +89,9 @@ auto main(int argc, const char *argv[]) -> int {
   }
   std::cerr << "Loaded corpus" << std::endl;
 
-  std::cerr << "Creating grid... ";
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
-  std::uniform_int_distribution<char> distribution('a', 'z');
-  constexpr std::size_t num_rows = 100;
-  constexpr std::size_t num_cols = 100;
-  std::vector<std::vector<char>> grid_vec(num_rows,
-                                          std::vector<char>(num_cols, '.'));
-  for (auto &row : grid_vec) {
-    for (auto &c : row) {
-      c = distribution(generator);
-    }
-  }
-  std::cerr << "Done" << std::endl;
-
-  std::cerr << "Starting solve... ";
-  Grid grid(grid_vec);
-  Solver solver(grid, *corpus);
-  auto start = std::chrono::high_resolution_clock::now();
-  auto word_paths = solver.find_all_words();
-  auto end = std::chrono::high_resolution_clock::now();
-  auto duration =
-      std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  auto seconds = static_cast<double>(duration.count()) / milli_in_sec;
-  std::cerr << "Done" << std::endl;
-  std::cerr << "Found " << word_paths.size() << " words in " << seconds
-            << " seconds" << std::endl;
+  benchmark_grid_size(10, 10, *corpus);    // NOLINT
+  benchmark_grid_size(100, 10, *corpus);   // NOLINT
+  benchmark_grid_size(100, 100, *corpus);  // NOLINT
 
   return EXIT_SUCCESS;
 }
