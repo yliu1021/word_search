@@ -17,8 +17,8 @@ auto Solver::find_all_words() const noexcept -> std::vector<WordPath> {
         continue;
       }
       Solver::WordPath path = {{c, {row, col}}};
-      for (auto& row : visited_pos) {
-        std::fill(row.begin(), row.end(), false);
+      for (auto& visited_pos_row : visited_pos) {
+        std::fill(visited_pos_row.begin(), visited_pos_row.end(), false);
       }
       dfs_find_words(found_words, {row, col}, path, visited_pos,
                      trie_.root_node()->at(c));
