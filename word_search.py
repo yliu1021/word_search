@@ -15,8 +15,7 @@ class WordSearch:
             self.corpus,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.STDOUT,
-            limit=1000000,
+            stderr=asyncio.subprocess.STDOUT
         )
         while True:
             line = await self.proc.stdout.readline()
