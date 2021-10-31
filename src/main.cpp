@@ -65,13 +65,10 @@ auto main(int argc, const char *argv[]) -> int {
             all_words.begin(), all_words.end(),
             [](const auto &a, const auto &b) { return a.size() < b.size(); });
         for (const Solver::WordPath &path : all_words) {
-          for (const auto &[c, _] : path) {
-            std::cout << c;
+          for (const auto &[c, pos] : path) {
+            std::cout << c << ':' << pos.first << ',' << pos.second << ' ';
           }
-          std::cout << std::endl;
-          for (const auto &[_, pos] : path) {
-            std::cout << pos.first << ' ' << pos.second << '\n';
-          }
+          std::cout << '\n';
         }
         std::cout << '-' << std::endl;
       } catch (const InvalidGrid &) {
