@@ -62,12 +62,19 @@ auto benchmark_grid_size(std::size_t num_rows, std::size_t num_cols,
   std::cerr << "Starting solve... ";
   Grid grid(grid_vec);
   Solver solver(grid, corpus);
-  auto start = std::chrono::high_resolution_clock::now();
-  auto word_paths = solver.find_all_words();
-  auto end = std::chrono::high_resolution_clock::now();
-  auto duration =
-      std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-  auto seconds = static_cast<double>(duration.count()) / milli_in_sec;
+  double tot_duration = 0;
+  constexpr int num_runs = 10;
+  std::vector<Solver::WordPath> word_paths;
+  for (int i = 0; i < num_runs; ++i) {
+    auto start = std::chrono::high_resolution_clock::now();
+    word_paths = solver.find_all_words();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    auto seconds = static_cast<double>(duration.count()) / milli_in_sec;
+    tot_duration += seconds;
+  }
+  double seconds = tot_duration / num_runs;
   std::cerr << "Done" << std::endl;
   auto kwords_per_second =
       static_cast<double>(word_paths.size()) / 1000.0 / seconds;  // NOLINT
@@ -93,7 +100,6 @@ auto main(int argc, const char *argv[]) -> int {
   benchmark_grid_size(100, 10, *corpus);     // NOLINT
   benchmark_grid_size(100, 100, *corpus);    // NOLINT
   benchmark_grid_size(1000, 100, *corpus);   // NOLINT
-  benchmark_grid_size(1000, 1000, *corpus);  // NOLINT
 
   return EXIT_SUCCESS;
 }
