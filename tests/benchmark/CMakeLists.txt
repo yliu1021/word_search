@@ -1,0 +1,2 @@
+add_executable(solver_benchmark solver_benchmark.cpp)
+target_link_libraries(solver_benchmark trie solver)

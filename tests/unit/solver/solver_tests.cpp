@@ -20,19 +20,37 @@ class SolverTests : public ::testing::Test {
     trie_.insert("abcd");
     std::vector<std::vector<char>> grid_vec{{'a', 'x', '.', '.'},
                                             {'b', 'c', 'x', '.'},
-                                            {'.', 'c', '.', 'a'},
-                                            {'.', '.', '.', '.'}};
+                                            {'.', 'c', '.', 'a'}};
     grid_ = std::make_shared<Grid>(grid_vec);
     solver_ = std::make_shared<Solver>(*grid_, trie_);
   }
 
   auto GetSolver() -> std::shared_ptr<Solver> { return solver_; }
+  auto GetGrid() -> std::shared_ptr<Grid> { return grid_; }
 
  private:
   Trie trie_;
   std::shared_ptr<Grid> grid_;
   std::shared_ptr<Solver> solver_;
 };
+
+TEST_F(SolverTests, Grid) {  // NOLINT
+  EXPECT_EQ(GetGrid()->num_cols(), 4);
+  EXPECT_EQ(GetGrid()->num_rows(), 3);
+  EXPECT_EQ(GetGrid()->at(0, 0), 'a');
+  EXPECT_EQ(GetGrid()->at(0, 1), 'x');
+  EXPECT_EQ(GetGrid()->at(0, 2), '.');
+  EXPECT_EQ(GetGrid()->at(0, 3), '.');
+  EXPECT_EQ(GetGrid()->at(1, 0), 'b');
+  EXPECT_EQ(GetGrid()->at(1, 1), 'c');
+  EXPECT_EQ(GetGrid()->at(1, 2), 'x');
+  EXPECT_EQ(GetGrid()->at(1, 3), '.');
+  EXPECT_EQ(GetGrid()->at(2, 0), '.');
+  EXPECT_EQ(GetGrid()->at(2, 1), 'c');
+  EXPECT_EQ(GetGrid()->at(2, 2), '.');
+  EXPECT_EQ(GetGrid()->at(2, 3), 'a');
+
+}
 
 TEST_F(SolverTests, FindWords) {  // NOLINT
   auto word_paths = GetSolver()->find_all_words();

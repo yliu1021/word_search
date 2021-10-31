@@ -21,10 +21,6 @@ class Solver {
   [[nodiscard]] auto find_all_words() const noexcept -> std::vector<WordPath>;
 
  private:
-  auto call_for_each_neighbor(
-      const Grid::Pos &curr_pos,
-      const std::function<void(const Grid::Pos &, char c)> &fn) const noexcept
-      -> void;
   auto dfs_find_words(std::vector<WordPath> &acc, const Grid::Pos &pos,
                       WordPath &path, std::set<Grid::Pos> &visited_pos,
                       const std::shared_ptr<Trie::Node> &trie) const noexcept

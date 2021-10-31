@@ -5,6 +5,7 @@
 #ifndef WORD_SEARCH_SRC_SOLVER_GRID_H_
 #define WORD_SEARCH_SRC_SOLVER_GRID_H_
 
+#include <functional>
 #include <vector>
 
 class InvalidGrid : std::exception {};
@@ -29,6 +30,11 @@ class Grid {
 
   [[nodiscard]] auto num_rows() const noexcept -> std::size_t;
   [[nodiscard]] auto num_cols() const noexcept -> std::size_t;
+
+  auto call_for_each_neighbor(
+      const Grid::Pos &curr_pos,
+      const std::function<void(const Grid::Pos &, char c)> &fn) const noexcept
+      -> void;
 
  private:
   std::vector<std::vector<char>> grid_;

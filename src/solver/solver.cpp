@@ -4,6 +4,8 @@
 
 #include "solver.h"
 
+#include <iostream>
+
 Solver::Solver(Grid g, Trie t) : grid_(std::move(g)), trie_(std::move(t)) {}
 
 auto Solver::find_all_words() const noexcept -> std::vector<WordPath> {
@@ -23,36 +25,6 @@ auto Solver::find_all_words() const noexcept -> std::vector<WordPath> {
   return found_words;
 }
 
-auto Solver::call_for_each_neighbor(
-    const Grid::Pos& curr_pos,
-    const std::function<void(const Grid::Pos&, char)>& fn) const noexcept
-    -> void {
-  const auto& [row, col] = curr_pos;
-  std::vector<int> valid_d_rows = {0};
-  if (row > 0) {
-    valid_d_rows.push_back(-1);
-  }
-  if (row < grid_.num_rows() - 1) {
-    valid_d_rows.push_back(1);
-  }
-  std::vector<int> valid_d_cols = {0};
-  if (col > 0) {
-    valid_d_cols.push_back(-1);
-  }
-  if (col < grid_.num_cols() - 1) {
-    valid_d_cols.push_back(1);
-  }
-  for (int d_row : valid_d_rows) {
-    for (int d_col : valid_d_cols) {
-      if (d_row == 0 && d_col == 0) {
-        continue;
-      }
-      Grid::Pos new_pos{row + d_row, col + d_col};
-      fn(new_pos, grid_[new_pos]);
-    }
-  }
-}
-
 auto Solver::dfs_find_words(
     std::vector<WordPath>& acc, const Grid::Pos& pos, Solver::WordPath& path,
     std::set<Grid::Pos>& visited_pos,
@@ -64,7 +36,7 @@ auto Solver::dfs_find_words(
     acc.push_back(path);
   }
   auto insert_loc = visited_pos.emplace(pos);
-  call_for_each_neighbor(pos, [&](const Grid::Pos& new_pos, char new_c) {
+  grid_.call_for_each_neighbor(pos, [&](const Grid::Pos& new_pos, char new_c) {
     if (visited_pos.contains(new_pos)) {
       return;
     }
