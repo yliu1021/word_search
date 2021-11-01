@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <optional>
 #include <span>
 
 #include "grid.h"

@@ -6,6 +6,7 @@
 #define WORD_SEARCH_SRC_TRIE_TRIE_H_
 
 #include <array>
+#include <memory>
 #include <string>
 
 enum class SearchResult { kFound, kPrefix, kNonexistent };
@@ -13,7 +14,7 @@ enum class SearchResult { kFound, kPrefix, kNonexistent };
 class Trie {
   static constexpr std::size_t num_buckets = 26;
 
- public:
+public:
   struct Node {
     void insert(const std::string &val, std::size_t pos) noexcept;
     [[nodiscard]] auto find(const std::string &val,
@@ -38,8 +39,8 @@ class Trie {
 
   [[nodiscard]] auto root_node() const noexcept -> std::shared_ptr<Node>;
 
- private:
+private:
   std::shared_ptr<Node> root_node_;
 };
 
-#endif  // WORD_SEARCH_SRC_TRIE_TRIE_H_
+#endif // WORD_SEARCH_SRC_TRIE_TRIE_H_
