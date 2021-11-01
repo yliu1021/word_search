@@ -18,9 +18,8 @@ class SolverTests : public ::testing::Test {
     trie_.insert("accxxb");
     trie_.insert("abd");
     trie_.insert("abcd");
-    std::vector<std::vector<char>> grid_vec{{'a', 'x', '.', '.'},
-                                            {'b', 'c', 'x', '.'},
-                                            {'.', 'c', '.', 'a'}};
+    std::vector<std::vector<char>> grid_vec{
+        {'a', 'x', '.', '.'}, {'b', 'c', 'x', '.'}, {'.', 'c', '.', 'a'}};
     grid_ = std::make_shared<Grid>(grid_vec);
     solver_ = std::make_shared<Solver>(*grid_, trie_);
   }
@@ -49,7 +48,6 @@ TEST_F(SolverTests, Grid) {  // NOLINT
   EXPECT_EQ(GetGrid()->at(2, 1), 'c');
   EXPECT_EQ(GetGrid()->at(2, 2), '.');
   EXPECT_EQ(GetGrid()->at(2, 3), 'a');
-
 }
 
 TEST_F(SolverTests, FindWords) {  // NOLINT
