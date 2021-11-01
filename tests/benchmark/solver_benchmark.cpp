@@ -5,8 +5,8 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
-#include <random>
 #include <optional>
+#include <random>
 #include <span>
 
 #include "grid.h"
@@ -97,10 +97,10 @@ auto main(int argc, const char *argv[]) -> int {
   }
   std::cerr << "Loaded corpus" << std::endl;
 
-  benchmark_grid_size(10, 10, *corpus);      // NOLINT
-  benchmark_grid_size(100, 10, *corpus);     // NOLINT
-  benchmark_grid_size(100, 100, *corpus);    // NOLINT
-  benchmark_grid_size(1000, 100, *corpus);   // NOLINT
+  benchmark_grid_size(10, 10, *corpus);     // NOLINT
+  benchmark_grid_size(100, 10, *corpus);    // NOLINT
+  benchmark_grid_size(100, 100, *corpus);   // NOLINT
+  benchmark_grid_size(1000, 100, *corpus);  // NOLINT
 
   return EXIT_SUCCESS;
 }
