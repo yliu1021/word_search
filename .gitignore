@@ -6,3 +6,6 @@ build/
 fuzz_output/
 
 venv/
+
+CMakeSettings.json
+.vs/

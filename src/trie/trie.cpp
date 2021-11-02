@@ -4,6 +4,8 @@
 
 #include "trie.h"
 
+#include <algorithm>
+
 static auto char_to_index(char c) -> std::size_t { return c - 'a'; }
 
 void Trie::Node::insert(const std::string& val, std::size_t pos) noexcept {

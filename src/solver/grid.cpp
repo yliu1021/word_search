@@ -4,6 +4,7 @@
 
 #include "grid.h"
 
+#include <algorithm>
 #include <utility>
 
 Grid::Grid(std::vector<std::vector<char>> grid) : grid_(std::move(grid)) {
@@ -34,7 +35,7 @@ auto Grid::at(std::size_t row, std::size_t col) noexcept -> char& {
 
 auto Grid::operator[](
     const std::pair<std::size_t, std::size_t>& pos) const noexcept -> char {
-  const auto [row, col] = pos;
+  const auto &[row, col] = pos;
   return this->at(row, col);
 }
 

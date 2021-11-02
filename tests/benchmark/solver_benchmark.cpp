@@ -50,12 +50,12 @@ auto benchmark_grid_size(std::size_t num_rows, std::size_t num_cols,
   std::cerr << "Creating " << num_rows << " x " << num_cols << " grid... ";
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
-  std::uniform_int_distribution<char> distribution('a', 'z');
+  std::uniform_int_distribution<int> distribution('a', 'z');
   std::vector<std::vector<char>> grid_vec(num_rows,
                                           std::vector<char>(num_cols, '.'));
   for (auto &row : grid_vec) {
     for (auto &c : row) {
-      c = distribution(generator);
+      c = static_cast<char>(distribution(generator));
     }
   }
   std::cerr << "Done" << std::endl;

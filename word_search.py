@@ -29,7 +29,9 @@ class WordSearch:
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        self.proc.terminate()
+        self.proc.stdin.write_eof()
+        await self.proc.stdin.drain()
+        await self.proc.wait()
 
     async def get_words(self, grid: Union[str, list[list[str]], list[str]]) -> list[list[tuple[str, tuple[int, int]]]]:
         lines = await self._get_words_raw(grid)
