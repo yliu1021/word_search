@@ -73,11 +73,14 @@ class WordSearch:
 async def main(word_search_loc, corpus_loc):
     word_search = WordSearch(word_search_loc, corpus_loc)
     async with word_search:
-        res = await word_search.get_words([
+        word_grid = [
             "abc",
             "def",
             "..g"
-        ])
+        ]
+        res = await word_search.get_words(word_grid)
+        for word in res:
+            pass
         print(res)
         res = await word_search.get_words([
             "aa",
