@@ -35,7 +35,7 @@ auto Grid::at(std::size_t row, std::size_t col) noexcept -> char& {
 
 auto Grid::operator[](
     const std::pair<std::size_t, std::size_t>& pos) const noexcept -> char {
-  const auto &[row, col] = pos;
+  const auto& [row, col] = pos;
   return this->at(row, col);
 }
 
@@ -48,25 +48,3 @@ auto Grid::operator[](const std::pair<std::size_t, std::size_t>& pos) noexcept
 auto Grid::num_rows() const noexcept -> std::size_t { return grid_.size(); }
 
 auto Grid::num_cols() const noexcept -> std::size_t { return grid_[0].size(); }
-
-auto Grid::call_for_each_neighbor(
-    const Grid::Pos& curr_pos,
-    const std::function<void(const Grid::Pos&, char)>& fn) const noexcept
-    -> void {
-  const auto& [row, col] = curr_pos;
-  for (int d_row : {-1, 0, 1}) {
-    for (int d_col : {-1, 0, 1}) {
-      if (d_row == 0 && d_col == 0) {
-        continue;
-      }
-      if (row == 0 && d_row == -1 || row == num_rows() - 1 && d_row == 1) {
-        continue;
-      }
-      if (col == 0 && d_col == -1 || col == num_cols() - 1 && d_col == 1) {
-        continue;
-      }
-      Pos new_pos = {row + d_row, col + d_col};
-      fn(new_pos, (*this)[new_pos]);
-    }
-  }
-}

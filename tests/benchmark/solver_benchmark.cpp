@@ -48,8 +48,8 @@ auto parse_corpus(const std::string &path) -> std::optional<Trie> {
 auto benchmark_grid_size(std::size_t num_rows, std::size_t num_cols,
                          const Trie &corpus) {
   std::cerr << "Creating " << num_rows << " x " << num_cols << " grid... ";
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
+  // we want deterministic "random" grids for fair benchmarks
+  std::default_random_engine generator(42069);  // NOLINT
   std::uniform_int_distribution<int> distribution('a', 'z');
   std::vector<std::vector<char>> grid_vec(num_rows,
                                           std::vector<char>(num_cols, '.'));
@@ -64,7 +64,7 @@ auto benchmark_grid_size(std::size_t num_rows, std::size_t num_cols,
   Grid grid(grid_vec);
   Solver solver(grid, corpus);
   double tot_duration = 0;
-  constexpr int num_runs = 10;
+  constexpr int num_runs = 100;
   std::vector<Solver::WordPath> word_paths;
   for (int i = 0; i < num_runs; ++i) {
     auto start = std::chrono::high_resolution_clock::now();

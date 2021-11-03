@@ -62,17 +62,34 @@ auto Solver::dfs_find_words(
   if (trie->is_leaf) {
     acc.push_back(path);
   }
-  visited_pos[pos.first][pos.second] = true;
-  grid_.call_for_each_neighbor(pos, [&](const Grid::Pos& new_pos, char new_c) {
+  const auto& [row, col] = pos;
+  visited_pos[row][col] = true;
+  for (const auto& [d_row, d_col] : {std::pair<int, int>{-1, -1},
+                                     {-1, 0},
+                                     {-1, 1},
+                                     {0, -1},
+                                     {0, 1},
+                                     {1, -1},
+                                     {1, 0},
+                                     {1, 1}}) {
+    // for each neighbor...
+    if (row == 0 && d_row == -1 || row == grid_.num_rows() - 1 && d_row == 1) {
+      continue;
+    }
+    if (col == 0 && d_col == -1 || col == grid_.num_cols() - 1 && d_col == 1) {
+      continue;
+    }
+    Grid::Pos new_pos = {row + d_row, col + d_col};
+    char new_c = grid_[new_pos];
     if (visited_pos[new_pos.first][new_pos.second]) {
-      return;
+      continue;
     }
     if (std::islower(new_c) == 0) {
-      return;
+      continue;
     }
     path.push_back({new_c, new_pos});
     dfs_find_words(acc, new_pos, path, visited_pos, trie->at(new_c));
     path.pop_back();
-  });
-  visited_pos[pos.first][pos.second] = false;
+  }
+  visited_pos[row][col] = false;
 }
