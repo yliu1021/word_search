@@ -1,4 +1,5 @@
 import asyncio
+from subprocess import list2cmdline
 import sys
 from typing import Optional, Union
 
@@ -69,6 +70,51 @@ class WordSearch:
                 out_lines.append(line)
         return out_lines
 
+    async def get_lists_of_words_from_grid(self, words_in_grid, word_grid: list[str]) -> list[list]:
+        all_words = list()
+
+        for word in words_in_grid:
+            print(word)
+            
+            new_grid = word_grid.copy()
+
+            new_grid = await self.collapse_word_grid()
+                
+            print_grid(new_grid)
+
+            new_words_in_grid = await self.get_words(new_grid)
+
+            if new_words_in_grid:
+                this_list = [word] + await self.get_lists_of_words_from_grid(words_in_grid = new_words_in_grid, word_grid = new_grid)
+            
+                all_words.append(this_list)
+            
+            else:
+                all_words.append([word])
+
+        return all_words
+
+    async def collapse_word_grid(word, new_grid) -> None:
+        for letter in word:
+            row, col = letter[1]
+            if row == 0:
+                new_grid[row] = new_grid[row][:col] + ' ' + new_grid[row][col+1:]
+            else:
+                row_i = row
+                while(row_i != 0):
+                    new_grid[row_i] = new_grid[row_i][:col] + new_grid[row_i-1][col] + new_grid[row_i][col+1:] 
+                    row_i -= 1
+                new_grid[row_i] = new_grid[row_i][:col] + ' ' + new_grid[row_i][col+1:] 
+
+    async def update_letter_locations(word, row, col):
+        # This function needs to go in the while loop updating the letter's coordinates to be accurate.
+        pass
+            
+
+def print_grid(word_grid: list[str]):
+    for row in word_grid:
+        print(row)
+    print()
 
 async def main(word_search_loc, corpus_loc):
     word_search = WordSearch(word_search_loc, corpus_loc)
@@ -78,16 +124,11 @@ async def main(word_search_loc, corpus_loc):
             "def",
             "..g"
         ]
-        res = await word_search.get_words(word_grid)
-        for word in res:
-            pass
-        print(res)
-        res = await word_search.get_words([
-            "aa",
-            "bb"
-        ])
-        print(res)
-
+        
+        #words_in_grid = await word_search.get_words(word_grid)
+        #list_of_words = await word_search.get_lists_of_words_from_grid(words_in_grid=words_in_grid, word_grid=word_grid)
+        #print(list_of_words)
+        
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
